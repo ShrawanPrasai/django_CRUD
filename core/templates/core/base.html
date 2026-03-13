@@ -11,7 +11,11 @@
       name="description"
       content="Professional Django CRUD application for product management"
     />
-    <link rel="stylesheet" href="{% static 'core/css/style.css' %}" />
+
+    <!-- Modular CSS -->
+    <link rel="stylesheet" href="{% static 'core/css/main.css' %}" />
+
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -118,6 +122,10 @@
       ↑
     </button>
 
-    <script src="{% static 'core/js/main.js' %}"></script>
+    <!-- Modular JavaScript -->
+    <script type="module" src="{% static 'core/js/main-modular.js' %}"></script>
+
+    <!-- Fallback for browsers without module support -->
+    <script nomodule src="{% static 'core/js/main.js' %}"></script>
   </body>
 </html>
