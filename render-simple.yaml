@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: django-crud-app
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: python fix-deployment.py && gunicorn crudproject.wsgi:application
+    envVars:
+      - key: DEBUG
+        value: False
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: django-crud-db
+          property: connectionString
