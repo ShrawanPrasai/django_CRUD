@@ -1,0 +1,33 @@
+{% extends 'core/base.html' %} {% block title %}Delete Product{% endblock %} {%
+block header %}Delete Product{% endblock %} {% block content %}
+<div style="margin-bottom: 20px">
+  <a href="{% url 'product_list' %}" class="btn btn-primary"
+    >← Back to Products</a
+  >
+</div>
+
+<div class="alert alert-danger">
+  <h3>Are you sure you want to delete "{{ product.name }}"?</h3>
+  <p>This action cannot be undone.</p>
+</div>
+
+<div class="card">
+  <h4>Product Details:</h4>
+  <p><strong>Name:</strong> {{ product.name }}</p>
+  <p>
+    <strong>Description:</strong> {{ product.description|truncatewords:20 }}
+  </p>
+  <p><strong>Price:</strong> ${{ product.price }}</p>
+</div>
+
+<form method="post">
+  {% csrf_token %}
+  <button type="submit" class="btn btn-danger">Yes, Delete Product</button>
+  <a
+    href="{% url 'product_detail' product.pk %}"
+    class="btn btn-primary"
+    style="margin-left: 10px"
+    >Cancel</a
+  >
+</form>
+{% endblock %}

@@ -1,0 +1,162 @@
+{% extends 'core/base.html' %} {% block title %}Product List{% endblock %} {%
+block header %}Product List{% endblock %} {% block content %}
+<div
+  style="
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  "
+>
+  <a href="{% url 'product_create' %}" class="btn btn-success"
+    >Add New Product</a
+  >
+
+  <!-- Search Form -->
+  <form method="get" style="display: flex; align-items: center">
+    <input
+      type="search"
+      name="q"
+      value="{{ query }}"
+      placeholder="Search products..."
+      style="
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        margin-right: 10px;
+        min-width: 200px;
+      "
+    />
+    <button type="submit" class="btn btn-primary">Search</button>
+    {% if query %}
+    <a href="{% url 'product_list' %}" class="btn" style="margin-left: 5px"
+      >Clear</a
+    >
+    {% endif %}
+  </form>
+</div>
+
+{% if query %}
+<div
+  style="
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: #e3f2fd;
+    border-radius: 4px;
+  "
+>
+  Showing results for: <strong>"{{ query }}"</strong>
+  ({{ page_obj.paginator.count }} product{{ page_obj.paginator.count|pluralize
+  }} found)
+</div>
+{% endif %} {% if products %}
+<div class="table-container">
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Price</th>
+        <th>Created</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for product in products %}
+      <tr>
+        <td>
+          <a href="{% url 'product_detail' product.pk %}">{{ product.name }}</a>
+        </td>
+        <td>{{ product.description|truncatewords:10 }}</td>
+        <td>${{ product.price }}</td>
+        <td>{{ product.created_at|date:"Y-m-d H:i" }}</td>
+        <td>
+          <a
+            href="{% url 'product_update' product.pk %}"
+            class="btn btn-primary"
+            >Edit</a
+          >
+          <a href="{% url 'product_delete' product.pk %}" class="btn btn-danger"
+            >Delete</a
+          >
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<!-- Pagination -->
+{% if is_paginated %}
+<div style="margin-top: 30px; text-align: center">
+  <div style="margin-bottom: 10px">
+    <span style="color: #666">
+      Showing {{ page_obj.start_index }} to {{ page_obj.end_index }} of {{
+      page_obj.paginator.count }} products
+    </span>
+  </div>
+
+  <div
+    style="display: flex; justify-content: center; gap: 5px; flex-wrap: wrap"
+  >
+    {% if page_obj.has_previous %}
+    <a
+      href="?page=1{% if query %}&q={{ query }}{% endif %}"
+      class="btn btn-primary"
+      >First</a
+    >
+    <a
+      href="?page={{ page_obj.previous_page_number }}{% if query %}&q={{ query }}{% endif %}"
+      class="btn btn-primary"
+      >Previous</a
+    >
+    {% endif %} {% for num in page_obj.paginator.page_range %} {% if
+    page_obj.number == num %}
+    <span
+      style="
+        padding: 8px 12px;
+        background-color: #667eea;
+        color: white;
+        border-radius: 4px;
+      "
+      >{{ num }}</span
+    >
+    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+    <a
+      href="?page={{ num }}{% if query %}&q={{ query }}{% endif %}"
+      class="btn btn-primary"
+      >{{ num }}</a
+    >
+    {% endif %} {% endfor %} {% if page_obj.has_next %}
+    <a
+      href="?page={{ page_obj.next_page_number }}{% if query %}&q={{ query }}{% endif %}"
+      class="btn btn-primary"
+      >Next</a
+    >
+    <a
+      href="?page={{ page_obj.paginator.num_pages }}{% if query %}&q={{ query }}{% endif %}"
+      class="btn btn-primary"
+      >Last</a
+    >
+    {% endif %}
+  </div>
+</div>
+{% endif %} {% else %}
+<div class="empty-state">
+  <h3>
+    {% if query %}No products found{% else %}No products available{% endif %}
+  </h3>
+  <p>
+    {% if query %}Try searching with different keywords.{% else %}Start by
+    creating your first product.{% endif %}
+  </p>
+  {% if not query %}
+  <a href="{% url 'product_create' %}" class="btn btn-success"
+    >Create Product</a
+  >
+  {% else %}
+  <a href="{% url 'product_list' %}" class="btn btn-primary">Clear Search</a>
+  {% endif %}
+</div>
+{% endif %} {% endblock %}

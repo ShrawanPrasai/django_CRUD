@@ -1,0 +1,27 @@
+{% extends 'core/base.html' %} {% block title %}{{ product.name }}{% endblock %}
+{% block header %}Product Details{% endblock %} {% block content %}
+<div style="margin-bottom: 20px">
+  <a href="{% url 'product_list' %}" class="btn btn-primary"
+    >← Back to Products</a
+  >
+</div>
+
+<div class="card">
+  <h2>{{ product.name }}</h2>
+  <p><strong>Description:</strong> {{ product.description }}</p>
+  <p><strong>Price:</strong> ${{ product.price }}</p>
+  <p><strong>Created:</strong> {{ product.created_at|date:"Y-m-d H:i" }}</p>
+  <p>
+    <strong>Last Updated:</strong> {{ product.updated_at|date:"Y-m-d H:i" }}
+  </p>
+</div>
+
+<div style="margin-top: 20px">
+  <a href="{% url 'product_update' product.pk %}" class="btn btn-primary"
+    >Edit Product</a
+  >
+  <a href="{% url 'product_delete' product.pk %}" class="btn btn-danger"
+    >Delete Product</a
+  >
+</div>
+{% endblock %}
