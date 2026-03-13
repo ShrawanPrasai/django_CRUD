@@ -4,25 +4,119 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{% block title %}Django CRUD{% endblock %}</title>
+    <title>
+      {% block title %}Django CRUD{% endblock %} | Product Management System
+    </title>
+    <meta
+      name="description"
+      content="Professional Django CRUD application for product management"
+    />
     <link rel="stylesheet" href="{% static 'core/css/style.css' %}" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body>
-    <div class="container">
-      <div class="header">
-        <h1>{% block header %}Django CRUD Project{% endblock %}</h1>
+    <!-- Navigation -->
+    <nav class="navbar">
+      <div class="nav-container">
+        <div class="nav-brand">
+          <h2>📦 Product Manager</h2>
+        </div>
+        <ul class="nav-menu">
+          <li class="nav-item">
+            <a href="{% url 'product_list' %}" class="nav-link">Products</a>
+          </li>
+          <li class="nav-item">
+            <a href="{% url 'product_create' %}" class="nav-link"
+              >Add Product</a
+            >
+          </li>
+          <li class="nav-item">
+            <a href="/admin/" class="nav-link" target="_blank">Admin</a>
+          </li>
+        </ul>
+        <div class="nav-toggle">
+          <span class="bar"></span>
+          <span class="bar"></span>
+          <span class="bar"></span>
+        </div>
       </div>
+    </nav>
 
-      <div class="content">
+    <!-- Header Section -->
+    <header class="page-header">
+      <div class="header-content">
+        <h1>{% block header %}Django CRUD Project{% endblock %}</h1>
+        <p class="header-subtitle">
+          {% block subtitle %}Professional Product Management System{% endblock
+          %}
+        </p>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="content-wrapper">
         {% if messages %}
-        <div class="messages">
+        <div class="messages-container">
           {% for message in messages %}
-          <div class="message {{ message.tags }}">{{ message }}</div>
+          <div class="message message-{{ message.tags }} message-slide-in">
+            <div class="message-icon">
+              {% if message.tags == 'success' %}✅{% endif %} {% if message.tags
+              == 'error' %}❌{% endif %} {% if message.tags == 'warning' %}⚠️{%
+              endif %} {% if message.tags == 'info' %}ℹ️{% endif %}
+            </div>
+            <div class="message-content">{{ message }}</div>
+            <button class="message-close" onclick="this.parentElement.remove()">
+              ×
+            </button>
+          </div>
           {% endfor %}
         </div>
         {% endif %} {% block content %} {% endblock %}
       </div>
-    </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>Product Manager</h3>
+          <p>
+            A professional Django CRUD application demonstrating modern web
+            development practices.
+          </p>
+        </div>
+        <div class="footer-section">
+          <h4>Quick Links</h4>
+          <ul>
+            <li><a href="{% url 'product_list' %}">All Products</a></li>
+            <li><a href="{% url 'product_create' %}">Add Product</a></li>
+            <li><a href="/admin/">Admin Panel</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h4>Technologies</h4>
+          <ul>
+            <li>Django 4.2.7</li>
+            <li>SQLite Database</li>
+            <li>Modern CSS & JavaScript</li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2024 Django CRUD Project. Built with ❤️ using Django.</p>
+      </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <button id="backToTop" class="back-to-top" onclick="scrollToTop()">
+      ↑
+    </button>
 
     <script src="{% static 'core/js/main.js' %}"></script>
   </body>
