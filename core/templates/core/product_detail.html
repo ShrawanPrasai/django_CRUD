@@ -1,27 +1,94 @@
-{% extends 'core/base.html' %} {% block title %}{{ product.name }}{% endblock %}
-{% block header %}Product Details{% endblock %} {% block content %}
-<div style="margin-bottom: 20px">
-  <a href="{% url 'product_list' %}" class="btn btn-primary"
-    >← Back to Products</a
-  >
+{% extends 'core/base.html' %} {% block title %}{{ product.name }} - Product
+Details{% endblock %} {% block header %}Product Details{% endblock %} {% block
+subtitle %}View and manage product information{% endblock %} {% block content %}
+<!-- Navigation Breadcrumb -->
+<div class="breadcrumb">
+  <a href="{% url 'product_list' %}">📦 Products</a>
+  <span class="breadcrumb-separator">›</span>
+  <span class="breadcrumb-current">{{ product.name }}</span>
 </div>
 
+<!-- Product Details Card -->
 <div class="card">
-  <h2>{{ product.name }}</h2>
-  <p><strong>Description:</strong> {{ product.description }}</p>
-  <p><strong>Price:</strong> ${{ product.price }}</p>
-  <p><strong>Created:</strong> {{ product.created_at|date:"Y-m-d H:i" }}</p>
-  <p>
-    <strong>Last Updated:</strong> {{ product.updated_at|date:"Y-m-d H:i" }}
-  </p>
+  <div class="product-header">
+    <h2>{{ product.name }}</h2>
+    <div class="product-meta">
+      <span class="price-tag large">${{ product.price }}</span>
+    </div>
+  </div>
+
+  <div class="product-content">
+    <div class="product-section">
+      <h3>📝 Description</h3>
+      <p>{{ product.description|linebreaks }}</p>
+    </div>
+
+    <div class="product-info-grid">
+      <div class="info-item">
+        <h4>📅 Created</h4>
+        <p>
+          {{ product.created_at|date:"F d, Y" }} at {{
+          product.created_at|date:"H:i" }}
+        </p>
+      </div>
+
+      <div class="info-item">
+        <h4>🔄 Last Updated</h4>
+        <p>
+          {{ product.updated_at|date:"F d, Y" }} at {{
+          product.updated_at|date:"H:i" }}
+        </p>
+      </div>
+
+      <div class="info-item">
+        <h4>🆔 Product ID</h4>
+        <p>#{{ product.pk }}</p>
+      </div>
+    </div>
+  </div>
 </div>
 
-<div style="margin-top: 20px">
-  <a href="{% url 'product_update' product.pk %}" class="btn btn-primary"
-    >Edit Product</a
-  >
-  <a href="{% url 'product_delete' product.pk %}" class="btn btn-danger"
-    >Delete Product</a
-  >
+<!-- Action Buttons -->
+<div class="action-section">
+  <div class="action-buttons">
+    <a
+      href="{% url 'product_update' product.pk %}"
+      class="btn btn-primary large"
+    >
+      ✏️ Edit Product
+    </a>
+    <a
+      href="{% url 'product_delete' product.pk %}"
+      class="btn btn-danger large"
+    >
+      🗑️ Delete Product
+    </a>
+  </div>
+
+  <div class="secondary-actions">
+    <a href="{% url 'product_list' %}" class="btn"> ← Back to Products </a>
+    <a href="{% url 'product_create' %}" class="btn btn-success">
+      ➕ Add New Product
+    </a>
+  </div>
+</div>
+
+<!-- Quick Stats -->
+<div class="stats-section">
+  <h3>📊 Quick Stats</h3>
+  <div class="stats-grid">
+    <div class="stat-item">
+      <div class="stat-value">{{ product.name|length }}</div>
+      <div class="stat-label">Name Length</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value">{{ product.description|length }}</div>
+      <div class="stat-label">Description Length</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value">{{ product.created_at|timesince }}</div>
+      <div class="stat-label">Age</div>
+    </div>
+  </div>
 </div>
 {% endblock %}

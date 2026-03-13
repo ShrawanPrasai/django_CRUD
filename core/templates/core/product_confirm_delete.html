@@ -1,33 +1,84 @@
-{% extends 'core/base.html' %} {% block title %}Delete Product{% endblock %} {%
-block header %}Delete Product{% endblock %} {% block content %}
-<div style="margin-bottom: 20px">
-  <a href="{% url 'product_list' %}" class="btn btn-primary"
-    >← Back to Products</a
-  >
+{% extends 'core/base.html' %} {% block title %}Delete Product - {{ product.name
+}}{% endblock %} {% block header %}Delete Product{% endblock %} {% block
+subtitle %}Confirm removal of product from inventory{% endblock %} {% block
+content %}
+<!-- Navigation Breadcrumb -->
+<div class="breadcrumb">
+  <a href="{% url 'product_list' %}">📦 Products</a>
+  <span class="breadcrumb-separator">›</span>
+  <a href="{% url 'product_detail' product.pk %}">{{ product.name }}</a>
+  <span class="breadcrumb-separator">›</span>
+  <span class="breadcrumb-current">Delete</span>
 </div>
 
+<!-- Warning Alert -->
 <div class="alert alert-danger">
-  <h3>Are you sure you want to delete "{{ product.name }}"?</h3>
-  <p>This action cannot be undone.</p>
-</div>
-
-<div class="card">
-  <h4>Product Details:</h4>
-  <p><strong>Name:</strong> {{ product.name }}</p>
-  <p>
-    <strong>Description:</strong> {{ product.description|truncatewords:20 }}
+  <div class="alert-header">
+    <span class="alert-icon">⚠️</span>
+    <h3>Confirm Product Deletion</h3>
+  </div>
+  <p class="alert-message">
+    You are about to permanently delete <strong>"{{ product.name }}"</strong>.
+    This action cannot be undone and all associated data will be lost.
   </p>
-  <p><strong>Price:</strong> ${{ product.price }}</p>
 </div>
 
-<form method="post">
-  {% csrf_token %}
-  <button type="submit" class="btn btn-danger">Yes, Delete Product</button>
-  <a
-    href="{% url 'product_detail' product.pk %}"
-    class="btn btn-primary"
-    style="margin-left: 10px"
-    >Cancel</a
+<!-- Product Details Card -->
+<div class="card">
+  <div class="delete-preview">
+    <h3>📦 Product to be Deleted</h3>
+
+    <div class="product-preview-grid">
+      <div class="preview-item">
+        <h4>Product Name</h4>
+        <p>{{ product.name }}</p>
+      </div>
+
+      <div class="preview-item">
+        <h4>Price</h4>
+        <p><span class="price-tag">${{ product.price }}</span></p>
+      </div>
+
+      <div class="preview-item">
+        <h4>Created</h4>
+        <p>{{ product.created_at|date:"F d, Y" }}</p>
+      </div>
+    </div>
+
+    <div class="preview-description">
+      <h4>Description</h4>
+      <p>{{ product.description|truncatewords:30 }}</p>
+    </div>
+  </div>
+</div>
+
+<!-- Action Buttons -->
+<div class="delete-actions">
+  <form method="post" class="delete-form">
+    {% csrf_token %}
+    <div class="action-buttons">
+      <button type="submit" class="btn btn-danger large">
+        🗑️ Yes, Delete Product
+      </button>
+      <a href="{% url 'product_detail' product.pk %}" class="btn large">
+        ❌ Cancel
+      </a>
+    </div>
+  </form>
+
+  <div class="warning-info">
+    <p>
+      <strong>⚠️ Warning:</strong> This action is irreversible. Please
+      double-check before confirming.
+    </p>
+  </div>
+</div>
+
+<!-- Quick Links -->
+<div class="quick-links">
+  <a href="{% url 'product_list' %}" class="btn">← Back to Products</a>
+  <a href="{% url 'product_detail' product.pk %}" class="btn btn-primary"
+    >👁️ View Product Details</a
   >
-</form>
+</div>
 {% endblock %}

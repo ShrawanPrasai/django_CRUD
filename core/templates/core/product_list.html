@@ -1,85 +1,75 @@
 {% extends 'core/base.html' %} {% block title %}Product List{% endblock %} {%
-block header %}Product List{% endblock %} {% block content %}
-<div
-  style="
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-    flex-wrap: wrap;
-  "
->
-  <a href="{% url 'product_create' %}" class="btn btn-success"
-    >Add New Product</a
-  >
-
-  <!-- Search Form -->
-  <form method="get" style="display: flex; align-items: center">
+block header %}Product Catalog{% endblock %} {% block subtitle %}Manage your
+product inventory with ease{% endblock %} {% block content %}
+<!-- Search Section -->
+<div class="search-section">
+  <form method="get" class="search-form">
     <input
       type="search"
       name="q"
       value="{{ query }}"
-      placeholder="Search products..."
-      style="
-        padding: 8px;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        margin-right: 10px;
-        min-width: 200px;
-      "
+      placeholder="🔍 Search products by name or description..."
+      class="search-input"
     />
     <button type="submit" class="btn btn-primary">Search</button>
     {% if query %}
-    <a href="{% url 'product_list' %}" class="btn" style="margin-left: 5px"
-      >Clear</a
-    >
+    <a href="{% url 'product_list' %}" class="btn">Clear</a>
     {% endif %}
   </form>
 </div>
 
 {% if query %}
-<div
-  style="
-    margin-bottom: 20px;
-    padding: 10px;
-    background-color: #e3f2fd;
-    border-radius: 4px;
-  "
->
-  Showing results for: <strong>"{{ query }}"</strong>
-  ({{ page_obj.paginator.count }} product{{ page_obj.paginator.count|pluralize
-  }} found)
+<div class="search-results-info">
+  <h3>🔍 Search Results</h3>
+  <p>
+    Found <strong>{{ page_obj.paginator.count }}</strong> product{{
+    page_obj.paginator.count|pluralize }} matching "<em>{{ query }}</em>"
+  </p>
 </div>
 {% endif %} {% if products %}
 <div class="table-container">
   <table>
     <thead>
       <tr>
-        <th>Name</th>
-        <th>Description</th>
-        <th>Price</th>
-        <th>Created</th>
-        <th>Actions</th>
+        <th>📦 Product Name</th>
+        <th>📝 Description</th>
+        <th>💰 Price</th>
+        <th>📅 Created</th>
+        <th>⚙️ Actions</th>
       </tr>
     </thead>
     <tbody>
       {% for product in products %}
       <tr>
         <td>
-          <a href="{% url 'product_detail' product.pk %}">{{ product.name }}</a>
+          <a href="{% url 'product_detail' product.pk %}" class="product-link">
+            <strong>{{ product.name }}</strong>
+          </a>
         </td>
-        <td>{{ product.description|truncatewords:10 }}</td>
-        <td>${{ product.price }}</td>
-        <td>{{ product.created_at|date:"Y-m-d H:i" }}</td>
+        <td>{{ product.description|truncatewords:15 }}</td>
+        <td><span class="price-tag">${{ product.price }}</span></td>
+        <td>{{ product.created_at|date:"M d, Y H:i" }}</td>
         <td>
-          <a
-            href="{% url 'product_update' product.pk %}"
-            class="btn btn-primary"
-            >Edit</a
-          >
-          <a href="{% url 'product_delete' product.pk %}" class="btn btn-danger"
-            >Delete</a
-          >
+          <div class="table-actions">
+            <a
+              href="{% url 'product_detail' product.pk %}"
+              class="btn btn-primary"
+              title="View Details"
+              >👁️</a
+            >
+            <a
+              href="{% url 'product_update' product.pk %}"
+              class="btn btn-primary"
+              title="Edit Product"
+              >✏️</a
+            >
+            <a
+              href="{% url 'product_delete' product.pk %}"
+              class="btn btn-danger"
+              title="Delete Product"
+              >🗑️</a
+            >
+          </div>
         </td>
       </tr>
       {% endfor %}
@@ -89,74 +79,73 @@ block header %}Product List{% endblock %} {% block content %}
 
 <!-- Pagination -->
 {% if is_paginated %}
-<div style="margin-top: 30px; text-align: center">
-  <div style="margin-bottom: 10px">
-    <span style="color: #666">
-      Showing {{ page_obj.start_index }} to {{ page_obj.end_index }} of {{
-      page_obj.paginator.count }} products
-    </span>
+<div class="pagination">
+  <div class="pagination-info">
+    <strong>Showing {{ page_obj.start_index }}-{{ page_obj.end_index }}</strong>
+    of {{ page_obj.paginator.count }} products
   </div>
 
-  <div
-    style="display: flex; justify-content: center; gap: 5px; flex-wrap: wrap"
-  >
+  <div class="pagination-controls">
     {% if page_obj.has_previous %}
     <a
       href="?page=1{% if query %}&q={{ query }}{% endif %}"
-      class="btn btn-primary"
-      >First</a
+      class="btn pagination-link"
+      >⏮️ First</a
     >
     <a
       href="?page={{ page_obj.previous_page_number }}{% if query %}&q={{ query }}{% endif %}"
-      class="btn btn-primary"
-      >Previous</a
+      class="btn pagination-link"
+      >⬅️ Previous</a
     >
     {% endif %} {% for num in page_obj.paginator.page_range %} {% if
     page_obj.number == num %}
-    <span
-      style="
-        padding: 8px 12px;
-        background-color: #667eea;
-        color: white;
-        border-radius: 4px;
-      "
-      >{{ num }}</span
-    >
+    <span class="pagination-current">{{ num }}</span>
     {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
     <a
       href="?page={{ num }}{% if query %}&q={{ query }}{% endif %}"
-      class="btn btn-primary"
+      class="btn pagination-link"
       >{{ num }}</a
     >
     {% endif %} {% endfor %} {% if page_obj.has_next %}
     <a
       href="?page={{ page_obj.next_page_number }}{% if query %}&q={{ query }}{% endif %}"
-      class="btn btn-primary"
-      >Next</a
+      class="btn pagination-link"
+      >Next ➡️</a
     >
     <a
       href="?page={{ page_obj.paginator.num_pages }}{% if query %}&q={{ query }}{% endif %}"
-      class="btn btn-primary"
-      >Last</a
+      class="btn pagination-link"
+      >Last ⏭️</a
     >
     {% endif %}
   </div>
 </div>
 {% endif %} {% else %}
 <div class="empty-state">
+  <div class="empty-icon">📦</div>
   <h3>
-    {% if query %}No products found{% else %}No products available{% endif %}
+    {% if query %}No Products Found{% else %}No Products Available{% endif %}
   </h3>
   <p>
-    {% if query %}Try searching with different keywords.{% else %}Start by
-    creating your first product.{% endif %}
+    {% if query %}Try searching with different keywords or check your
+    spelling.{% else %}Start building your inventory by adding your first
+    product.{% endif %}
   </p>
   {% if not query %}
   <a href="{% url 'product_create' %}" class="btn btn-success"
-    >Create Product</a
+    >➕ Add Your First Product</a
   >
   {% else %}
-  <a href="{% url 'product_list' %}" class="btn btn-primary">Clear Search</a>
+  <a href="{% url 'product_list' %}" class="btn btn-primary">🔄 Clear Search</a>
   {% endif %}
 </div>
-{% endif %} {% endblock %}
+{% endif %}
+
+<!-- Quick Actions -->
+<div class="quick-actions">
+  <a href="{% url 'product_create' %}" class="btn btn-success"
+    >➕ Add New Product</a
+  >
+  <a href="/admin/" class="btn btn-primary" target="_blank">🔧 Admin Panel</a>
+</div>
+{% endblock %}
